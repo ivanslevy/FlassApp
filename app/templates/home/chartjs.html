@@ -1,0 +1,432 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Charts {% endblock %} 
+
+<!-- Specific CSS Plugins goes HERE  -->
+{% block css_plugins %}{% endblock css_plugins %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %} 
+
+  <div class="content-wrapper">
+    <div class="row">
+      <div class="col-lg-6 grid-margin stretch-card">
+                  <div class="card">
+                    <div class="card-body">
+                      <h4 class="fw-bold fst-italic">Camembert de la repartition de la distribution</h4>
+                      <div id="container1"></div>
+                        <script>
+                          var chartData = {{ chart_data2|tojson|safe }};
+                          var dataz = [];
+
+                          for (var i = 0; i < chartData.Names.length; i++) {
+                              dataz.push([chartData.Counts[i], chartData.Names[i]]);
+                          }
+                          Highcharts.chart('container1', {
+                              chart: {
+                                  type: 'pie',
+                                  options3d: {
+                                      enabled: true,
+                                      alpha: 45,
+                                      beta: 0
+                                  }
+                              },
+                              title: {
+                                  text: 'Représentation 3D'
+                              },
+                              subtitle: {
+                                text: '<b><i>Source : Travaux sous Jupyter Notebook</i></b>'
+                              },
+                              plotOptions: {
+                                pie: {
+                                    allowPointSelect: true,
+                                    cursor: 'pointer',
+                                    depth: 35,
+                                    dataLabels: {
+                                        enabled: true,
+                                        format: '{point.name}'
+                                    }
+                                }
+                              },
+                              series: [{
+                                  type: 'pie',
+                                  name: 'Count',
+                                  data: dataz
+                              }]
+                          });
+                      </script>
+                    </div>
+                  </div>
+                </div>
+      <div class="col-lg-6 grid-margin stretch-card">
+        <div class="card">
+          <div class="card-body">
+            <h4 class="fw-bold fst-italic">Statistiques Descriptives de la distribution</h4>
+            <div id="container2"></div>
+            <script>
+                var chartData = {{ chart_data3|safe}};
+                var categories = Object.keys(chartData);
+                var seriesData = Object.values(chartData);
+                Highcharts.chart('container2', {
+                    chart: {
+                        type: 'bar'
+                    },
+                    title: {
+                        text: 'Quelques Mesures Statistiques',
+                        align: 'center'
+                    },
+                    subtitle: {
+                        text: '<b><i>Source : Travaux sous Jupyter Notebook</i></b>',
+                        align: 'center'
+                    },
+                    xAxis: {
+                        categories: categories,
+                        title: {
+                            text: null
+                        },
+                        gridLineWidth: 1,
+                        lineWidth: 0
+                    },
+                    yAxis: {
+                        min: 0,
+                        title: {
+                            text: 'Value (cm)',
+                            align: 'high'
+                        },
+                        labels: {
+                            overflow: 'justify'
+                        },
+                        gridLineWidth: 0
+                    },
+                    tooltip: {
+                        valueSuffix: ' cm'
+                    },
+                    plotOptions: {
+                        bar: {
+                            borderRadius: '50%',
+                            dataLabels: {
+                                enabled: true
+                            },
+                            groupPadding: 0.1
+                        }
+                    },
+                    legend: {
+                        layout: 'vertical',
+                        align: 'right',
+                        verticalAlign: 'top',
+                        x: -40,
+                        y: 80,
+                        floating: true,
+                        borderWidth: 1,
+                        backgroundColor:
+                            Highcharts.defaultOptions.legend.backgroundColor || '#FFFFFF',
+                        shadow: true
+                    },
+                    credits: {
+                        enabled: false
+                    },
+                    series: [{
+                      name: 'Mean',
+                      data: seriesData.map(item => item.mean)
+                    },
+                    {
+                      name: 'min',
+                      data: seriesData.map(item => item.min)
+                    },
+                    {
+                      name: '25%',
+                      data: seriesData.map(item => item['25%'])
+                    },
+                    {
+                      name: 'Median',
+                      data: seriesData.map(item => item['50%'])
+                    },
+                    {
+                      name: '75%',
+                      data: seriesData.map(item => item['75%'])
+                    },
+                    {
+                      name: 'max',
+                      data: seriesData.map(item => item.max)
+                    }
+                    ]
+                });
+            </script>
+          </div>
+        </div>
+      </div>
+    </div>
+   <div class="row">
+    <div class="col-lg-3 grid-margin stretch-card">
+        <div class="card">
+        <div class="card-body">
+          <h4 class="fw-bold fst-italic">Sepal Length</h4>
+          <div id="container3"></div>
+            <script>
+                var chartData = {{ df_sl|safe}};
+                var categories = Object.keys(chartData);
+                var seriesData = Object.values(chartData);
+                Highcharts.chart('container3', {
+                    chart: {
+                        type: 'column'
+                    },
+                    title: {
+                        text: 'Quelques Mesures Statistiques',
+                        align: 'center'
+                    },
+                    subtitle: {
+                        text: '<b><i>Source : Travaux sous Jupyter Notebook</i></b>',
+                        align: 'center'
+                    },
+                    xAxis: {
+                        categories: categories,
+                        crosshair: true,
+                        accessibility: {
+                            description: 'Statistic'
+                        }
+                    },
+                    yAxis: {
+                        min: 0,
+                        title: {
+                            text: 'Value (cm)'
+                        }
+                    },
+                    tooltip: {
+                        valueSuffix: ' (cm)'
+                    },
+                    plotOptions: {
+                        column: {
+                            pointPadding: 0.2,
+                            borderWidth: 0
+                        }
+                    },
+                    series: [
+                        {
+                            name: 'Setosa',
+                            data: seriesData.map(item => item.setosa)
+                        },
+                        {
+                            name: 'Versicolor',
+                            data: seriesData.map(item => item.versicolor)
+                        },
+                        {
+                            name: 'Virginica',
+                            data: seriesData.map(item => item.virginica)
+                        },
+                    ]
+                });
+
+            </script>
+        </div>
+        </div>
+    </div>
+    <div class="col-lg-3 grid-margin stretch-card">
+        <div class="card">
+        <div class="card-body">
+          <h4 class="fw-bold fst-italic">Sepal Width</h4>
+          <div id="container4"></div>
+            <script>
+                var chartData = {{ df_sw|safe}};
+                var categories = Object.keys(chartData);
+                var seriesData = Object.values(chartData);
+                Highcharts.chart('container4', {
+                    chart: {
+                        type: 'column'
+                    },
+                    title: {
+                        text: 'Quelques Mesures Statistiques',
+                        align: 'center'
+                    },
+                    subtitle: {
+                        text: '<b><i>Source : Travaux sous Jupyter Notebook</i></b>',
+                        align: 'center'
+                    },
+                    xAxis: {
+                        categories: categories,
+                        crosshair: true,
+                        accessibility: {
+                            description: 'Statistic'
+                        }
+                    },
+                    yAxis: {
+                        min: 0,
+                        title: {
+                            text: 'Value (cm)'
+                        }
+                    },
+                    tooltip: {
+                        valueSuffix: ' (cm)'
+                    },
+                    plotOptions: {
+                        column: {
+                            pointPadding: 0.2,
+                            borderWidth: 0
+                        }
+                    },
+                    series: [
+                        {
+                            name: 'Setosa',
+                            data: seriesData.map(item => item.setosa)
+                        },
+                        {
+                            name: 'Versicolor',
+                            data: seriesData.map(item => item.versicolor)
+                        },
+                        {
+                            name: 'Virginica',
+                            data: seriesData.map(item => item.virginica)
+                        },
+                    ]
+                });
+
+            </script>
+        </div>
+        </div>
+    </div>
+    <div class="col-lg-3 grid-margin stretch-card">
+        <div class="card">
+        <div class="card-body">
+          <h4 class="fw-bold fst-italic">Petal Length</h4>
+          <div id="container5"></div>
+            <script>
+                var chartData = {{ df_pl|safe}};
+                var categories = Object.keys(chartData);
+                var seriesData = Object.values(chartData);
+                Highcharts.chart('container5', {
+                    chart: {
+                        type: 'column'
+                    },
+                    title: {
+                        text: 'Quelques Mesures Statistiques',
+                        align: 'center'
+                    },
+                    subtitle: {
+                        text: '<b><i>Source : Travaux sous Jupyter Notebook</i></b>',
+                        align: 'center'
+                    },
+                    xAxis: {
+                        categories: categories,
+                        crosshair: true,
+                        accessibility: {
+                            description: 'Statistic'
+                        }
+                    },
+                    yAxis: {
+                        min: 0,
+                        title: {
+                            text: 'Value (cm)'
+                        }
+                    },
+                    tooltip: {
+                        valueSuffix: ' (cm)'
+                    },
+                    plotOptions: {
+                        column: {
+                            pointPadding: 0.2,
+                            borderWidth: 0
+                        }
+                    },
+                    series: [
+                        {
+                            name: 'Setosa',
+                            data: seriesData.map(item => item.setosa)
+                        },
+                        {
+                            name: 'Versicolor',
+                            data: seriesData.map(item => item.versicolor)
+                        },
+                        {
+                            name: 'Virginica',
+                            data: seriesData.map(item => item.virginica)
+                        },
+                    ]
+                });
+
+            </script>
+        </div>
+        </div>
+    </div>
+    <div class="col-lg-3 grid-margin stretch-card">
+        <div class="card">
+        <div class="card-body">
+          <h4 class="fw-bold fst-italic">Petal Width</h4>
+          <div id="container6"></div>
+            <script>
+                var chartData = {{ df_pw|safe}};
+                var categories = Object.keys(chartData);
+                var seriesData = Object.values(chartData);
+                Highcharts.chart('container6', {
+                    chart: {
+                        type: 'column'
+                    },
+                    title: {
+                        text: 'Quelques Mesures Statistiques',
+                        align: 'center'
+                    },
+                    subtitle: {
+                        text: '<b><i>Source : Travaux sous Jupyter Notebook</i></b>',
+                        align: 'center'
+                    },
+                    xAxis: {
+                        categories: categories,
+                        crosshair: true,
+                        accessibility: {
+                            description: 'Statistic'
+                        }
+                    },
+                    yAxis: {
+                        min: 0,
+                        title: {
+                            text: 'Value (cm)'
+                        }
+                    },
+                    tooltip: {
+                        valueSuffix: ' (cm)'
+                    },
+                    plotOptions: {
+                        column: {
+                            pointPadding: 0.2,
+                            borderWidth: 0
+                        }
+                    },
+                    series: [
+                        {
+                            name: 'Setosa',
+                            data: seriesData.map(item => item.setosa)
+                        },
+                        {
+                            name: 'Versicolor',
+                            data: seriesData.map(item => item.versicolor)
+                        },
+                        {
+                            name: 'Virginica',
+                            data: seriesData.map(item => item.virginica)
+                        },
+                    ]
+                });
+
+            </script>
+        </div>
+        </div>
+    </div>
+   </div>
+  </div>
+
+{% endblock content %}
+
+<!-- Specific JS Plugins goes HERE  -->
+{% block js_plugins %}
+
+  <script src="/static/assets/vendors/chart.js/Chart.min.js"></script>
+  <script src="/static/assets/vendors/bootstrap-datepicker/bootstrap-datepicker.min.js"></script>
+
+{% endblock js_plugins %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+
+  <script src="/static/assets/js/chart.js"></script>
+
+{% endblock javascripts %}

@@ -1,0 +1,25 @@
+{
+  "name": "jinja-star-admin",
+  "mastertemplate": "boilerplate-code-jinja",
+  "version": "1.0.0",
+  "description": "Template project - Flask/Jinja2 Theme",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/app-generator/jinja-star-admin.git"
+  },
+  "bugs": {
+    "url": "https://github.com/app-generator/jinja-star-admin/issues",
+    "email": "support@appseed.us"
+  },
+  "author": "AppSeed App Generator <support@appseed.us> (https://appseed.us)",
+  "engines": {
+    "node": ">=10.0.0"
+  },
+  "homepage": "https://github.com/app-generator/jinja-star-admin#readme",
+  "main": "rf_model.joblib.js",
+  "license": "ISC",
+  "dependencies": {
+    "scikit-learn": "^0.1.0"
+  }
+}

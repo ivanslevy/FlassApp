@@ -1,0 +1,231 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Dashboard {% endblock %} 
+
+<!-- Specific CSS Plugins goes HERE  -->
+{% block css_plugins %}
+
+  <link rel="stylesheet" href="/static/assets/js/select.dataTables.min.css">
+
+{% endblock css_plugins %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+  <div class="content-wrapper">
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="home-tab">
+          <div class="tab-content tab-content-basic">
+            <div class="tab-pane fade show active" id="overview" role="tabpanel" aria-labelledby="overview"> 
+              <div class="row justify-content-between d-flex">
+                <div class="col-sm-auto">
+                  <div class="statistics-details text-center">
+                    <div class="card bg-primary card-rounded" style="padding: 50px;box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.3)">
+                      <p class="statistics-title text-light" style="font-weight: bold; font-size: 14px">Exactitude</p>
+                      <h3 class="rate-percentage">{{ acc }}%</h3>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-sm-auto">
+                  <div class="statistics-details text-center">
+                    <div class="card bg-danger card-rounded" style="padding: 50px;box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.3)">
+                      <p class="statistics-title text-light" style="font-weight: bold; font-size: 14px">Précision</p>
+                      <h3 class="rate-percentage">{{ pre }}%</h3>
+                    </div>
+                  </div>
+                </div>
+
+                  <div class="col-sm-auto">
+                  <div class="statistics-details text-center">
+                    <div class="card bg-success card-rounded" style="padding: 50px;box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.3)">
+                      <p class="statistics-title text-light" style="font-weight: bold; font-size: 14px">Rappel</p>
+                      <h3 class="rate-percentage">{{ rec }}%</h3>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-sm-auto">
+                  <div class="statistics-details text-center">
+                    <div class="card bg-warning card-rounded" style="padding: 50px;box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.3)">
+                      <p class="statistics-title text-light" style="font-weight: bold; font-size: 14px">F1-Score</p>
+                      <h3 class="rate-percentage">{{ f1 }}%</h3>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-sm-auto">
+                  <div class="statistics-details text-center">
+                    <div class="card bg-info card-rounded" style="padding: 50px;box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.3)">
+                      <p class="statistics-title text-light" style="font-weight: bold; font-size: 14px">AUC Score</p>
+                      <h3 class="rate-percentage">{{ auc }}</h3>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+              <div class="row">
+                <div class="col-lg-6 grid-margin stretch-card">
+                  <div class="card">
+                    <div class="card-body">
+                      <h4 class="fw-bold fst-italic">Courbe des métriques</h4>
+                      <div id="container1"></div>
+                        <script>
+                          var chartData = {{ chart_data|tojson }};
+                          Highcharts.chart('container1', {
+                              title: {
+                                  text: 'Courbe des métriques'
+                              },
+                              subtitle: {
+                                text: '<b><i>Source : Travaux sous Jupyter Notebook</i></b>'
+                              },
+                              xAxis: {
+                                  categories: chartData.Names
+                              },
+                              yAxis: {
+                                  title: {
+                                      text: 'Pourcentage (%)'
+                                  }
+                              },
+                              series: [{
+                                  type: 'line',
+                                  name: 'Metrics',
+                                  data: chartData.Metrics
+                              }]
+                          });
+                      </script>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-6 grid-margin stretch-card">
+                  <div class="card">
+                    <div class="card-body">
+                      <h4 class="fw-bold fst-italic">Diagramme en Barres des métriques</h4>
+                      <div id="container2"></div>
+                      <script>
+                          var chartData = {{ chart_data|tojson }};
+                          Highcharts.chart('container2', {
+                              title: {
+                                  text: 'Diagramme en Barres des métriques'
+                              },
+                              subtitle: {
+                                text: '<b><i>Source : Travaux sous Jupyter Notebook</i></b>'
+                              },
+                              xAxis: {
+                                  categories: chartData.Names
+                              },
+                              yAxis: {
+                                  title: {
+                                      text: 'Pourcentage (%)'
+                                  }
+                              },
+                              series: [{
+                                  type: 'column',
+                                  name: 'Metrics',
+                                  data: chartData.Metrics,
+                                  colorByPoint: true,
+                              }],
+                          })
+                      </script>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-12 grid-margin stretch-card">
+                  <div class="card">
+                  <div class="card-body">
+                    <h4 class="fw-bold fst-italic">Radar des métriques</h4>
+                    <figure class="highcharts-figure">
+                      <div id="container3"></div>
+                    </figure>
+                    <script>
+                        var chartData = {{ chart_data|tojson }};
+                        Highcharts.chart('container3', {
+                            chart: {
+                                polar: true,
+                                type: 'line'
+                            },
+                            title: {
+                                text: 'Diagramme Radar des Métriques'
+                            },
+                            pane: {
+                                size: '80%'
+                             },
+                            subtitle: {
+                                text: '<b><i>Source : Travaux sous Jupyter Notebook</i></b>'
+                            },
+                            xAxis: {
+                                categories: chartData.Names,
+                                tickmarkPlacement: 'on',
+                                lineWidth: 0
+                            },
+                             yAxis: {
+                                gridLineInterpolation: 'polygon',
+                                lineWidth: 0,
+                                min: 0
+                            },
+                            tooltip: {
+                                shared: true,
+                                pointFormat: '<span style="color:{series.color}">{series.name}: <b>{point.y:,.2f}%</b><br/>'
+                            },
+                            legend: {
+                                align: 'right',
+                                verticalAlign: 'middle',
+                                layout: 'vertical'
+                            },
+                            series: [{
+                                name: 'Metrics',
+                                data: chartData.Metrics,
+                                pointPlacement: 'on', // Disposition des points entre les angles
+                            }],
+                            responsive: {
+                                rules: [{
+                                    condition: {
+                                        maxWidth: 500
+                                    },
+                                    chartOptions: {
+                                        legend: {
+                                            align: 'center',
+                                            verticalAlign: 'bottom',
+                                            layout: 'horizontal'
+                                        },
+                                        pane: {
+                                            size: '70%'
+                                        }
+                                    }
+                                }]
+                            }
+                        });
+                    </script>
+                  </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+{% endblock content %}
+
+<!-- Specific JS Plugins goes HERE  -->
+{% block js_plugins %}
+
+  <script src="/static/assets/vendors/chart.js/Chart.min.js"></script>
+  <script src="/static/assets/vendors/bootstrap-datepicker/bootstrap-datepicker.min.js"></script>
+  <script src="/static/assets/vendors/progressbar.js/progressbar.min.js"></script>
+
+{% endblock js_plugins %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+
+  <script src="/static/assets/js/dashboard.js"></script>
+  <script src="/static/assets/js/Chart.roundedBarCharts.js"></script>
+
+{% endblock javascripts %}

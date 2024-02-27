@@ -1,0 +1,41 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Basic Table {% endblock %} 
+
+<!-- Specific CSS Plugins goes HERE  -->
+{% block css_plugins %}{% endblock css_plugins %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %} 
+
+  <div class="content-wrapper">
+    <div class="row">
+      <div class="col-lg-10 grid-margin stretch-card m-auto">
+        <div class="card">
+          <div class="card-body">
+            <h4 class="card-title">Vue des données</h4>
+
+            <div class="table-responsive">
+              <div style="max-height: 500px;overflow-y: auto;">
+                {{ table|safe }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+{% endblock content %}
+
+<!-- Specific JS Plugins goes HERE  -->
+{% block js_plugins %}
+
+  <script src="/static/assets/vendors/bootstrap-datepicker/bootstrap-datepicker.min.js"></script>
+
+{% endblock js_plugins %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}{% endblock javascripts %}

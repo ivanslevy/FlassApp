@@ -1,0 +1,133 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Basic Elements {% endblock %} 
+
+<!-- Specific CSS Plugins goes HERE  -->
+{% block css_plugins %}
+
+  <link rel="stylesheet" href="/static/assets/vendors/select2/select2.min.css">
+  <link rel="stylesheet" href="/static/assets/vendors/select2-bootstrap-theme/select2-bootstrap.min.css">
+{% endblock css_plugins %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+
+{% block content %}
+       
+  <div class="content-wrapper">
+    <div class="row">
+      <div class="col-md-12 grid-margin stretch-card">
+        <div class="card">
+          <div class="card-body">
+            <h4 class="card-title">Prédictions</h4>
+            <p class="card-description">
+              Prédire la nature d'une fleur en fonction de ses différentes caractéristiques.
+            </p>
+            <form id="myForm" class="forms-sample">
+              <div class="form-group">
+                <label for="value1">Sepal length (cm)</label>
+                <input type="number" class="form-control" id="value1" name="value1" min="4.3" max="7.9" step="0.1" required placeholder="entrez une valeur entre 4.3 et 7.9">
+                <span id="errorvalue1" style="color: red;"></span>
+              </div>
+              <div class="form-group">
+                <label for="value2">Sepal width (cm)</label>
+                <input type="number" class="form-control" id="value2" name="value2" min="2" max="4.4" step="0.1" required placeholder="entrez une valeur entre 2 et 4.4">
+                <span id="errorvalue2" style="color: red;"></span>
+              </div>
+              <div class="form-group">
+                <label for="value3">Petal length (cm)</label>
+                <input type="number" class="form-control" id="value3" name="value3" min="1" max="6.9" step="0.1" required placeholder="entrez une valeur entre 1 et 6.9">
+                <span id="errorvalue3" style="color: red;"></span>
+              </div>
+              <div class="form-group">
+                <label for="value4">Petal width (cm)</label>
+                <input type="number" class="form-control" id="value4" name="value4" min="0.1" max="2.5" step="0.1" required placeholder="entrez une valeur entre 0.1 et 2.5">
+                <span id="errorvalue4" style="color: red;"></span>
+              </div>
+
+              <div class="text-center">
+                <button id="submitBtn" onclick="checkValidityAndExecute()" type="button" class="btn btn-primary me-2">Prédire</button>
+                <div id="alertContainer" class="mt-3"></div>
+
+                <script>
+                  function checkValidityAndExecute() {
+                        var form = document.getElementById('myForm');
+                        var isValid = true;
+
+                        form.querySelectorAll(':invalid').forEach(function(element) {
+                          var fieldName = element.name;
+                          var errorMessage = element.validationMessage;
+                          document.getElementById('error' + fieldName).textContent = errorMessage;
+                          isValid = false;
+                        });
+
+                        if (isValid) {
+                          form.querySelectorAll(':invalid').forEach(function(element) {
+                            var fieldName = element.name;
+                            document.getElementById('error' + fieldName).textContent = '';
+                          });
+
+                          document.getElementById('submitBtn').addEventListener('click', function(event) {
+                             event.preventDefault();
+
+                           });
+
+                          fetch('/predict', {
+                              method: 'POST',
+                              body: new FormData(document.getElementById('myForm'))
+                          })
+                          .then(response => response.text())
+                          .then(data => {
+                            console.log(data);
+
+                            document.getElementById('alertContainer');
+
+                            alertContainer.innerHTML = ` <div class="alert alert-info alert-dismissible fade show">
+                                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                                            <span style="font-size: 16px">La fleur prédite est de nature : <strong>${data}</strong>.</span>
+                                            </div>`;
+                          })
+                          .catch(error => console.error('Une erreur s\'est produite:', error));
+
+                        }
+                  }
+
+
+                  document.querySelectorAll('input').forEach(function(input) {
+                    input.addEventListener('input', function() {
+                        var fieldName = this.name;
+                        document.getElementById('error' + fieldName).textContent = '';
+                    });
+                  });
+
+              </script>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      </div>
+
+    </div>
+  </div>
+
+{% endblock content %}
+
+<!-- Specific JS Plugins goes HERE  -->
+{% block js_plugins %}
+
+  <script src="/static/assets/vendors/typeahead.js/typeahead.bundle.min.js"></script>
+  <script src="/static/assets/vendors/select2/select2.min.js"></script>
+  <script src="/static/assets/vendors/bootstrap-datepicker/bootstrap-datepicker.min.js"></script>
+
+{% endblock js_plugins %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+
+  <script src="/static/assets/js/file-upload.js"></script>
+  <script src="/static/assets/js/typeahead.js"></script>
+  <script src="/static/assets/js/select2.js"></script>
+
+{% endblock javascripts %}
